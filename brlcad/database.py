@@ -18,11 +18,6 @@ _lib.BrlConstDatabaseLoad.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 _lib.BrlConstDatabaseTitle.restype = ctypes.c_char_p
 _lib.BrlConstDatabaseTitle.argtypes = [ctypes.c_void_p]
 
-_lib.BrlNewFileDatabase.restype = ctypes.c_void_p
-_lib.BrlNewFileDatabase.argtypes = []
-
-_lib.BrlNewMemoryDatabase.restype = ctypes.c_void_p
-_lib.BrlNewMemoryDatabase.argtypes = [] 
 
 class ConstDatabase:
     """Object-oriented Python interface for the BRL-CAD ConstDatabase."""
@@ -80,22 +75,3 @@ class ConstDatabase:
     def __del__(self):
         # Fallback safety net in case the user forgets to call Close()
         self.Close()
-        
-class FileDatabase(ConstDatabase):
-    """Object-oriented Python interface for the BRL-CAD FileDatabase."""
-    
-    def __init__(self):
-        # Override constructor to use the FileDatabase factory
-        self._handle = _lib.BrlNewFileDatabase()
-        if not self._handle:
-            self._handle = None
-
-
-class MemoryDatabase(ConstDatabase):
-    """Object-oriented Python interface for the BRL-CAD MemoryDatabase."""
-    
-    def __init__(self):
-        # Override constructor to use the MemoryDatabase factory
-        self._handle = _lib.BrlNewMemoryDatabase()
-        if not self._handle:
-            self._handle = None
