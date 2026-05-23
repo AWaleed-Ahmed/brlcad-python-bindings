@@ -1,9 +1,10 @@
 import ctypes
 import os
 
-# Point directly to the compiled C-bridge shared library file
-_lib_path = os.path.expanduser("~/brlcad-dev/moose/build/src/libbrlcad.so")
-_lib = ctypes.CDLL(_lib_path)
+
+# # Point directly to the compiled C-bridge shared library file
+import ctypes
+_lib = ctypes.CDLL("libbrlcad.so")
 
 # Configure raw C-Bridge function signatures
 _lib.BrlNewConstDatabase.restype = ctypes.c_void_p

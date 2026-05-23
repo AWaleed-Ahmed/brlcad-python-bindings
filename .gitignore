@@ -9,3 +9,11 @@ ENV/
 # Python caches
 __pycache__/
 *.pyc
+
+# Python Distribution & Packaging Builds
+dist/
+build/
+*.egg-info/
+
+# Local Testing Scripts
+hello.py

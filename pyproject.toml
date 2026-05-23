@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brlcad-python-bindings"
+version = "0.1.0"
+authors = [
+    { name="Abdullah Waleed Ahmed" }
+]
+description = "Python bindings for the BRL-CAD Moose C-bridge engine"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: POSIX :: Linux",
+]
+
+[tool.setuptools]
+# Automatically discovers the 'brlcad' package directory
+packages = ["brlcad"]
+
+[tool.setuptools.package-data]
+# Instructs the builder to include all documentation files inside the wheel
+"brlcad" = ["docs/*.md", "docs/*.txt"]
+
+[project.urls]
+Homepage = "https://github.com/AWaleed-Ahmed/brlcad-python-bindings"
