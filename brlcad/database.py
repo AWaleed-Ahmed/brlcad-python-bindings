@@ -6,18 +6,29 @@ import os
 import ctypes
 _lib = ctypes.CDLL("libbrlcad.so")
 
-# Configure raw C-Bridge function signatures
+# Constructors for Different Databases
 _lib.BrlNewConstDatabase.restype = ctypes.c_void_p
 _lib.BrlNewConstDatabase.argtypes = []
 
-_lib.BrlDeleteConstDatabase.restype = None
-_lib.BrlDeleteConstDatabase.argtypes = [ctypes.c_void_p]
+_lib.BrlNewFileDatabase.restype = ctypes.c_void_p
+_lib.BrlNewFileDatabase.argtypes = []
 
+_lib.BrlNewMemoryDatabase.restype = ctypes.c_void_p
+_lib.BrlNewMemoryDatabase.argtypes = []
+
+# Unified Delete
+_lib.BrlDeleteHandle.restype = None
+_lib.BrlDeleteHandle.argtypes = [ctypes.c_void_p]
+
+# Core Database Methods
 _lib.BrlConstDatabaseLoad.restype = ctypes.c_int
 _lib.BrlConstDatabaseLoad.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
 _lib.BrlConstDatabaseTitle.restype = ctypes.c_char_p
 _lib.BrlConstDatabaseTitle.argtypes = [ctypes.c_void_p]
+
+_lib.BrlDatabaseSetTitle.restype = None
+_lib.BrlDatabaseSetTitle.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
 
 class ConstDatabase:
@@ -53,7 +64,7 @@ class ConstDatabase:
     def Close(self):
         """Explicitly closes the database and frees C++ memory immediately."""
         if hasattr(self, '_handle') and self._handle is not None:
-            _lib.BrlDeleteConstDatabase(self._handle)
+            _lib.BrlDeleteHandle(self._handle)
             self._handle = None  # Clear the state
             
         
@@ -76,3 +87,39 @@ class ConstDatabase:
     def __del__(self):
         # Fallback safety net in case the user forgets to call Close()
         self.Close()
+        
+           
+class Database(ConstDatabase):
+    """Intermediate parent class providing read-write capabilities (SetTitle)."""
+    
+    def __init__(self):
+        # Generic Database initialization if instantiated directly (though usually subclassed)
+        super().__init__()
+
+    def SetTitle(self, title: str):
+        """Modifies the internal title tracking string inside the database header."""
+        if not self._handle:
+            raise ValueError("Cannot invoke SetTitle on an explicitly closed session.")
+            
+        c_title = ctypes.c_char_p(title.encode('utf-8'))
+        _lib.BrlDatabaseSetTitle(self._handle, c_title)
+
+
+class FileDatabase(Database):
+    """Object-oriented Python interface for the read-write BRL-CAD FileDatabase."""
+    
+    def __init__(self):
+        # Override with the full-featured write-capable file constructor
+        self._handle = _lib.BrlNewFileDatabase()
+        if not self._handle:
+            self._handle = None
+
+
+class MemoryDatabase(Database):
+    """Object-oriented Python interface for the in-memory BRL-CAD MemoryDatabase."""
+    
+    def __init__(self):
+        # Override with the isolated memory-backed database constructor
+        self._handle = _lib.BrlNewMemoryDatabase()
+        if not self._handle:
+            self._handle = None

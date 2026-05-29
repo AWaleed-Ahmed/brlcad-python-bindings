@@ -2,9 +2,11 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from brlcad import ConstDatabase
 
 def run_test():
+    #change the path of the sample .g file to your test .g file before running the test
     sample_g_file = "/home/home/Documents/work/Python/main-brlcad/cube_scene.g"
     
     # Initialize the object tracker
