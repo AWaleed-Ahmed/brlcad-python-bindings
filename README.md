@@ -22,7 +22,7 @@ python -m build
 
 Install the Package:
 ```bash 
-pip install dist/brlcad_python_bindings-0.1.0-py3-none-any.whl --force-reinstall
+pip install dist/brlcad_python_bindings-*.whl
 ```
 ## Verification and Testing 
 
