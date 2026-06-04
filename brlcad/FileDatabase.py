@@ -1,4 +1,4 @@
-#                       I N I T . P Y
+#                       F I L E D A T A B A S E . P Y
 #  BRL-CAD
 #
 # Copyright (c) 2026 United States Government as represented by
@@ -17,24 +17,19 @@
 # License along with this file; see the file named COPYING for more
 # information.
 #
-# @file __init__.py
+# @file FileDatabase.py
 #
 # BRL-CAD core simplified Python interface:
-#       allows importing of Python modules
+#       Python interface implementation for the FileDatabase.cpp
 
 
-from .ConstDatabase import ConstDatabase
+from ._bindings import _lib
 from .Database import Database
-from .FileDatabase import FileDatabase
-from .MemoryDatabase import MemoryDatabase
-from .Object import Object
-from .Arb8 import Arb8
 
-__all__ = [
-    'ConstDatabase',
-    'Database', 
-    'FileDatabase', 
-    'MemoryDatabase',
-    'Object',
-    'Arb8'
-]
+class FileDatabase(Database):
+    """Object-oriented Python interface for the read-write BRL-CAD FileDatabase."""
+    
+    def __init__(self):
+        self._handle = _lib.BrlNewFileDatabase()
+        if not self._handle:
+            self._handle = None

@@ -1,4 +1,4 @@
-#                       I N I T . P Y
+#                       D A T A B A S E . P Y
 #  BRL-CAD
 #
 # Copyright (c) 2026 United States Government as represented by
@@ -17,24 +17,26 @@
 # License along with this file; see the file named COPYING for more
 # information.
 #
-# @file __init__.py
+# @file Database.py
 #
 # BRL-CAD core simplified Python interface:
-#       allows importing of Python modules
+#       Python interface implementation for the Database.py
 
 
+import ctypes
+from ._bindings import _lib
 from .ConstDatabase import ConstDatabase
-from .Database import Database
-from .FileDatabase import FileDatabase
-from .MemoryDatabase import MemoryDatabase
-from .Object import Object
-from .Arb8 import Arb8
 
-__all__ = [
-    'ConstDatabase',
-    'Database', 
-    'FileDatabase', 
-    'MemoryDatabase',
-    'Object',
-    'Arb8'
-]
+class Database(ConstDatabase):
+    """Intermediate parent class providing read-write capabilities (SetTitle)."""
+    
+    def __init__(self):
+        super().__init__()
+
+    def SetTitle(self, title: str):
+        """Modifies the internal title tracking string inside the database header."""
+        if not self._handle:
+            raise ValueError("Cannot invoke SetTitle on an explicitly closed session.")
+            
+        c_title = ctypes.c_char_p(title.encode('utf-8'))
+        _lib.BrlDatabaseSetTitle(self._handle, c_title)

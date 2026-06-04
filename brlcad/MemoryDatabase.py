@@ -1,4 +1,4 @@
-#                       I N I T . P Y
+#                       M E M O R Y D A T A B A S E . P Y
 #  BRL-CAD
 #
 # Copyright (c) 2026 United States Government as represented by
@@ -17,24 +17,19 @@
 # License along with this file; see the file named COPYING for more
 # information.
 #
-# @file __init__.py
+# @file MemoryDatabase.py
 #
 # BRL-CAD core simplified Python interface:
-#       allows importing of Python modules
+#       Python interface implementation for the MemoryDatabase.cpp
 
 
-from .ConstDatabase import ConstDatabase
+from ._bindings import _lib
 from .Database import Database
-from .FileDatabase import FileDatabase
-from .MemoryDatabase import MemoryDatabase
-from .Object import Object
-from .Arb8 import Arb8
 
-__all__ = [
-    'ConstDatabase',
-    'Database', 
-    'FileDatabase', 
-    'MemoryDatabase',
-    'Object',
-    'Arb8'
-]
+class MemoryDatabase(Database):
+    """Object-oriented Python interface for the in-memory BRL-CAD MemoryDatabase."""
+    
+    def __init__(self):
+        self._handle = _lib.BrlNewMemoryDatabase()
+        if not self._handle:
+            self._handle = None
