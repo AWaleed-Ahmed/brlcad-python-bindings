@@ -22,23 +22,25 @@
 # BRL-CAD core simplified Python interface:
 #       Python interface implementation for the ConstDatabase.cpp
 
-
 import os
 import ctypes
 from ._bindings import _lib
+from .Handle import Handle  
 
-class ConstDatabase:
+class ConstDatabase(Handle):
     """Object-oriented Python interface for the BRL-CAD ConstDatabase."""
     
     def __init__(self):
-        self._handle = _lib.BrlNewConstDatabase()
-        if not self._handle:
-            self._handle = None
+        native_handle = _lib.BrlNewConstDatabase()
+        if not native_handle:
+            native_handle = None
+        super().__init__(handle=native_handle)
 
     def Load(self, file_name: str) -> bool:
         """Loads a BRL-CAD database file using the existing handle."""
         if not self._handle:
-            self._handle = _lib.BrlNewConstDatabase()
+            native_handle = _lib.BrlNewConstDatabase()
+            self._handle = native_handle if native_handle else None
             if not self._handle:
                 return False
         
@@ -48,22 +50,10 @@ class ConstDatabase:
         status = _lib.BrlConstDatabaseLoad(self._handle, c_file)
         
         if status != 0:
-            self.Close()
+            self.close() 
             return False
             
         return True
-        
-    def Close(self):
-        """Explicitly closes the database and frees C++ memory immediately."""
-        if hasattr(self, '_handle') and self._handle is not None:
-            _lib.BrlDeleteHandle(self._handle)
-            self._handle = None
-            
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.Close()
         
     def Title(self) -> str:
         """Extracts and decodes the database internal title header."""
@@ -72,6 +62,103 @@ class ConstDatabase:
         
         raw_ptr = _lib.BrlConstDatabaseTitle(self._handle)
         return raw_ptr.decode('utf-8') if raw_ptr else ""
+    
+    def plot(self, object_name: str, vector_list: Handle):
+        """Plots the targeted database geometry element data into a VectorList."""
+        if not self._handle:
+            return
+        
+        c_name = ctypes.c_char_p(object_name.encode('utf-8'))
+        _lib.BrlConstDatabasePlot(self._handle, c_name, vector_list._handle)
 
-    def __del__(self):
-        self.Close()
+    def get(self, object_name: str):
+        """Retrieves a geometric primitive object reference owned by the database."""
+        if not self._handle:
+            return None
+        
+        c_name = ctypes.c_char_p(object_name.encode('utf-8'))
+        raw_obj = _lib.BrlConstDatabaseGet(self._handle, c_name)
+        if not raw_obj:
+            return None
+            
+        from .Object import Object
+        return Object(handle=raw_obj, owned=False)
+
+    def facetize(self, object_name: str) -> ctypes.c_void_p:
+        """Generates a Non-Manifold Geometry mesh pointer managed by the database."""
+        if not self._handle:
+            return None
+        
+        c_name = ctypes.c_char_p(object_name.encode('utf-8'))
+        raw_mesh = _lib.BrlConstDatabaseFacetize(self._handle, c_name)
+        return raw_mesh
+    
+    def select(self, object_name: str):
+        """Adds a target object item to the active selection group cluster state."""
+        if not self._handle:
+            return
+        
+        c_name = ctypes.c_char_p(object_name.encode('utf-8'))
+        _lib.BrlConstDatabaseSelect(self._handle, c_name)
+
+    def unselect_all(self):
+        """Clears all objects from the active database selection group array."""
+        if self._handle:
+            _lib.BrlConstDatabaseUnSelectAll(self._handle)
+
+    def is_selection_empty(self) -> bool:
+        """Checks if the active database selection group is empty."""
+        if not self._handle:
+            return True
+        
+        return _lib.BrlConstDatabaseSelectionIsEmpty(self._handle) == 1
+
+    def bounding_box_minima(self):
+        """Returns a 3-tuple (x, y, z) indicating the minimum bounding space corner coordinates."""
+        if not self._handle:
+            return (0.0, 0.0, 0.0)
+        
+        x, y, z = ctypes.c_double(), ctypes.c_double(), ctypes.c_double()
+        _lib.BrlConstDatabaseBoundingBoxMinima(self._handle, ctypes.byref(x), ctypes.byref(y), ctypes.byref(z))
+        return (x.value, y.value, z.value)
+
+    def bounding_box_maxima(self):
+        """Returns a 3-tuple (x, y, z) indicating the maximum bounding space corner coordinates."""
+        if not self._handle:
+            return (0.0, 0.0, 0.0)
+        
+        x, y, z = ctypes.c_double(), ctypes.c_double(), ctypes.c_double()
+        _lib.BrlConstDatabaseBoundingBoxMaxima(self._handle, ctypes.byref(x), ctypes.byref(y), ctypes.byref(z))
+        return (x.value, y.value, z.value)
+
+    def first_top_object(self) -> ctypes.c_void_p:
+        """Returns the raw pointer to the first top-level object iterator."""
+        if not self._handle:
+            return None
+        
+        return _lib.BrlConstDatabaseFirstTopObject(self._handle)
+
+    def iterator_good(self, iterator_handle) -> bool:
+        """Checks if the iterator pointer is still valid."""
+        if not iterator_handle:
+            return False
+        
+        return _lib.BrlTopObjectIteratorGood(iterator_handle) == 1
+
+    def iterator_next(self, iterator_handle):
+        """Advances the iterator to the next top-level object."""
+        if iterator_handle:
+            _lib.BrlTopObjectIteratorNext(iterator_handle)
+
+    def iterator_name(self, iterator_handle) -> str:
+        """Gets the string name of the object at the current iterator position."""
+        if not iterator_handle:
+            return ""
+        
+        raw_ptr = _lib.BrlTopObjectIteratorName(iterator_handle)
+        return raw_ptr.decode('utf-8') if raw_ptr else ""
+
+    def delete_iterator(self, iterator_handle):
+        """Manually deletes the iterator tracking structure from the heap."""
+        if iterator_handle:
+            _lib.BrlDeleteTopObjectIterator(iterator_handle)

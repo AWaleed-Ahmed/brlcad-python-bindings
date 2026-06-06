@@ -1,4 +1,4 @@
-#                       O B J E C T . P Y
+#                       V E C T O R L I S T . P Y
 #  BRL-CAD
 #
 # Copyright (c) 2026 United States Government as represented by
@@ -17,25 +17,30 @@
 # License along with this file; see the file named COPYING for more
 # information.
 #
-# @file Object.py
+# @file VectorList.py
 #
 # BRL-CAD core simplified Python interface:
-#       Python interface implementation for the Object.cpp
+#       Python interface implementation for VectorList.cpp
 
 
-import ctypes
 from ._bindings import _lib
 from .Handle import Handle
 
-class Object(Handle):
-    """Base class for all BRL-CAD geometric primitives."""
+class VectorList(Handle):
+    """
+    Object-oriented Python interface for the BRL-CAD VectorList point container.
+    Used for gathering coordinate arrays during geometric plot computations.
+    """
     
-    def __init__(self, handle=None, owned=True):
-        super().__init__(handle=handle, owned=owned)
+    def __init__(self):
+        # Initialize by creating a raw native VectorList handle instance
+        native_handle = _lib.BrlNewVectorList()
+        if not native_handle:
+            native_handle = None
+        super().__init__(handle=native_handle)
 
-    def set_name(self, name: str):
-        """Sets the structural database lookup name key for this shape."""
+    def clear(self):
+        """Clears all points currently stored inside the vector list container."""
         if not self._handle:
-            return 
-        c_name = ctypes.c_char_p(name.encode('utf-8'))
-        _lib.BrlObjectSetName(self._handle, c_name)
+            return
+        _lib.BrlVectorListClear(self._handle)
