@@ -28,7 +28,10 @@ from .Database import Database
 from .FileDatabase import FileDatabase
 from .MemoryDatabase import MemoryDatabase
 from .Object import Object
+from .Cone import Cone
 from .Arb8 import Arb8
+from .Sphere import Sphere
+from .Ellipsoid import Ellipsoid
 
 __all__ = [
     'ConstDatabase',
@@ -36,5 +39,8 @@ __all__ = [
     'FileDatabase', 
     'MemoryDatabase',
     'Object',
-    'Arb8'
+    'Arb8',
+    'Cone',
+    'Sphere',
+    'Ellipsoid'
 ]

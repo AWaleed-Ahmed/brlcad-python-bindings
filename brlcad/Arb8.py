@@ -29,24 +29,27 @@ from .Object import Object
 class Arb8(Object):
     """8-Vertex Arbitrary Polyhedron primitive tracking container."""
     
-    @classmethod
     def from_2_points(cls, p1, p2):
-        """Creates an aligned bounding box cube from 2 diagonal vertices."""
-        instance = cls()
-        instance._handle = _lib.BrlNewArb8From2Points(
-            p1[0], p1[1], p1[2],
-            p2[0], p2[1], p2[2]
+        """Creates an Arb4 variant primitive configuration from 2 diagonal bounds."""
+        handle = _lib.BrlNewArb8AsArb4(
+            float(p1[0]), float(p1[1]), float(p1[2]),
+            float(p2[0]), float(p2[1]), float(p2[2])
         )
-        return instance
+        return cls(handle)
 
-    @classmethod
+    def as_rectangular_parallel_piped(cls, p1, p2):
+        """Creates a rectangular parallel piped (rpp) primitive form."""
+        handle = _lib.BrlNewArb8AsRectengularParallelPiped(
+            float(p1[0]), float(p1[1]), float(p1[2]),
+            float(p2[0]), float(p2[1]), float(p2[2])
+        )
+        return cls(handle)
+
     def from_8_points(cls, points_list):
-        """Creates an explicit 8-point structural polyhedron wrapper."""
+        """Creates an explicit 8-point structural polyhedron configuration."""
         if len(points_list) != 8 or any(len(p) != 3 for p in points_list):
             raise ValueError("An explicit Arb8 requires exactly 8 points of (X, Y, Z) dimensions.")
         
         flat_coords = [float(coord) for point in points_list for coord in point]
-        
-        instance = cls()
-        instance._handle = _lib.BrlNewArb8From8Points(*flat_coords)
-        return instance
+        handle = _lib.BrlNewArb8AsArb8(*flat_coords)
+        return cls(handle)
