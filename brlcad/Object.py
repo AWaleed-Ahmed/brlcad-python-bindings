@@ -39,3 +39,12 @@ class Object(Handle):
             return 
         c_name = ctypes.c_char_p(name.encode('utf-8'))
         _lib.BrlObjectSetName(self._handle, c_name)
+        
+    def is_valid(self):
+        """Returns True if the geometric primitive is valid."""
+        return _lib.BrlObjectIsValid(self._handle) == 1
+
+    def get_type(self):
+        """Returns the core primitive engine type string."""
+        type_str = _lib.BrlObjectType(self._handle)
+        return type_str.decode('utf-8') if type_str else ""
