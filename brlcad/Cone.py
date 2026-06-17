@@ -30,65 +30,69 @@ from .Object import Object
 class Cone(Object):
     """Cone primitive tracking container."""
 
-    def __init__(self, handle=None, owned=True):
+    def __init__(self, *args, **kwargs):
+        handle = None
+        owned = kwargs.get('owned', True)
+
+        # 1. Handle Input: Cone(raw_handle)
+        if len(args) == 1 and isinstance(args[0], (int, ctypes.c_void_p)):
+            handle = args[0]
+
+        # 2. Right Circular Cylinder Overload: Cone(base, height, radius)
+        elif len(args) == 3:
+            base, height, radius = args[0], args[1], args[2]
+            handle = _lib.BrlNewConeAsRightCircularCylinder(
+                float(base[0]), float(base[1]), float(base[2]),
+                float(height[0]), float(height[1]), float(height[2]),
+                float(radius)
+            )
+
+        elif len(args) == 4:
+            # 3. Truncated Right Circular Cone Overload: Cone(base, height, radius_base, radius_top)
+            if isinstance(args[2], (int, float)) and isinstance(args[3], (int, float)):
+                base, height, radius_base, radius_top = args[0], args[1], args[2], args[3]
+                handle = _lib.BrlNewConeAsTruncatedRightCircularCone(
+                    float(base[0]), float(base[1]), float(base[2]),
+                    float(height[0]), float(height[1]), float(height[2]),
+                    float(radius_base), float(radius_top)
+                )
+            # 4. Right Elliptical Cylinder Overload: Cone(base, height, axis_a, axis_b)
+            else:
+                base, height, axis_a, axis_b = args[0], args[1], args[2], args[3]
+                handle = _lib.BrlNewConeAsRightEllipticalCylinder(
+                    float(base[0]), float(base[1]), float(base[2]),
+                    float(height[0]), float(height[1]), float(height[2]),
+                    float(axis_a[0]), float(axis_a[1]), float(axis_a[2]),
+                    float(axis_b[0]), float(axis_b[1]), float(axis_b[2])
+                )
+
+        # 5. Truncated Erected Cone Overload: Cone(base, height, axis_a, axis_b, scale)
+        elif len(args) == 5:
+            base, height, axis_a, axis_b, scale = args[0], args[1], args[2], args[3], args[4]
+            handle = _lib.BrlNewConeAsTruncatedErectedCone(
+                float(base[0]), float(base[1]), float(base[2]),
+                float(height[0]), float(height[1]), float(height[2]),
+                float(axis_a[0]), float(axis_a[1]), float(axis_a[2]),
+                float(axis_b[0]), float(axis_b[1]), float(axis_b[2]),
+                float(scale)
+            )
+
+        # 6. Truncated General Cone Overload: Cone(base, height, axis_a, axis_b, ratio_c, ratio_d)
+        elif len(args) == 6:
+            base, height, axis_a, axis_b, ratio_c, ratio_d = args[0], args[1], args[2], args[3], args[4], args[5]
+            handle = _lib.BrlNewConeAsTruncatedGeneralCone(
+                float(base[0]), float(base[1]), float(base[2]),
+                float(height[0]), float(height[1]), float(height[2]),
+                float(axis_a[0]), float(axis_a[1]), float(axis_a[2]),
+                float(axis_b[0]), float(axis_b[1]), float(axis_b[2]),
+                float(ratio_c), float(ratio_d)
+            )
+
+        # 7. Fallback Default: Cone()
         if handle is None:
             handle = _lib.BrlNewCone()
+
         super().__init__(handle=handle, owned=owned)
-
-    @classmethod
-    def create_truncated_general(cls, base, height, semi_axis_a, semi_axis_b, ratio_c_to_a, ratio_d_to_b):
-        """Creates a truncated general cone primitive."""
-        handle = _lib.BrlNewConeAsTruncatedGeneralCone(
-            float(base[0]), float(base[1]), float(base[2]),
-            float(height[0]), float(height[1]), float(height[2]),
-            float(semi_axis_a[0]), float(semi_axis_a[1]), float(semi_axis_a[2]),
-            float(semi_axis_b[0]), float(semi_axis_b[1]), float(semi_axis_b[2]),
-            float(ratio_c_to_a), float(ratio_d_to_b)
-        )
-        return cls(handle)
-
-    @classmethod
-    def create_truncated_erected(cls, base, height, semi_axis_a, semi_axis_b, scale):
-        """Creates a truncated erected cone primitive configuration."""
-        handle = _lib.BrlNewConeAsTruncatedErectedCone(
-            float(base[0]), float(base[1]), float(base[2]),
-            float(height[0]), float(height[1]), float(height[2]),
-            float(semi_axis_a[0]), float(semi_axis_a[1]), float(semi_axis_a[2]),
-            float(semi_axis_b[0]), float(semi_axis_b[1]), float(semi_axis_b[2]),
-            float(scale)
-        )
-        return cls(handle)
-
-    @classmethod
-    def create_right_elliptical_cylinder(cls, base, height, semi_axis_a, semi_axis_b):
-        """Creates a right elliptical cylinder primitive context."""
-        handle = _lib.BrlNewConeAsRightEllipticalCylinder(
-            float(base[0]), float(base[1]), float(base[2]),
-            float(height[0]), float(height[1]), float(height[2]),
-            float(semi_axis_a[0]), float(semi_axis_a[1]), float(semi_axis_a[2]),
-            float(semi_axis_b[0]), float(semi_axis_b[1]), float(semi_axis_b[2])
-        )
-        return cls(handle)
-
-    @classmethod
-    def create_truncated_right_circular(cls, base, height, radius_base, radius_top):
-        """Creates a truncated right circular cone primitive."""
-        handle = _lib.BrlNewConeAsTruncatedRightCircularCone(
-            float(base[0]), float(base[1]), float(base[2]),
-            float(height[0]), float(height[1]), float(height[2]),
-            float(radius_base), float(radius_top)
-        )
-        return cls(handle)
-
-    @classmethod
-    def create_right_circular_cylinder(cls, base, height, radius):
-        """Creates a uniform right circular cylinder primitive configuration."""
-        handle = _lib.BrlNewConeAsRightCircularCylinder(
-            float(base[0]), float(base[1]), float(base[2]),
-            float(height[0]), float(height[1]), float(height[2]),
-            float(radius)
-        )
-        return cls(handle)
 
     def get_base_point(self):
         """Returns the base reference point pointer mapping address."""
