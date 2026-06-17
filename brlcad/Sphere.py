@@ -29,20 +29,28 @@ from .Object import Object
 class Sphere(Object):
     """Sphere primitive tracking container."""
 
-    def __init__(self, handle=None, owned=True):
+    def __init__(self, *args, **kwargs):
+        handle = None
+        owned = kwargs.get('owned', True)
+
+        # 1. Handle Input: Sphere(raw_handle)
+        if len(args) == 1 and isinstance(args[0], (int, ctypes.c_void_p)):
+            handle = args[0]
+
+        # 2. C++ Overload Mimic: Sphere(center, radius)
+        elif len(args) == 2:
+            center, radius = args[0], args[1]
+            handle = _lib.BrlNewSphereAsSphere(
+                float(center[0]), float(center[1]), float(center[2]),
+                float(radius)
+            )
+
+        # 3. Fallback Default: Sphere()
         if handle is None:
             handle = _lib.BrlNewSphere()
+
         super().__init__(handle=handle, owned=owned)
-
-    @classmethod
-    def create(cls, center, radius):
-        """Creates an initialized Sphere primitive using center coordinates and radius."""
-        handle = _lib.BrlNewSphereAsSphere(
-            float(center[0]), float(center[1]), float(center[2]),
-            float(radius)
-        )
-        return cls(handle)
-
+        
     def get_center(self):
         """Returns the center point wrapper handle address of the sphere."""
         return _lib.BrlSphereCenter(self._handle)

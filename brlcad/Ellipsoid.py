@@ -29,40 +29,46 @@ from .Object import Object
 class Ellipsoid(Object):
     """Ellipsoid primitive tracking container."""
 
-    def __init__(self, handle=None, owned=True):
+    def __init__(self, *args, **kwargs):
+        handle = None
+        owned = kwargs.get('owned', True)
+
+        # 1. Handle Input: Ellipsoid(raw_handle)
+        if len(args) == 1 and isinstance(args[0], (int, ctypes.c_void_p)):
+            handle = args[0]
+
+        # 2. Sphere Layout Overload: Ellipsoid(center, radius)
+        elif len(args) == 2 and isinstance(args[1], (int, float)):
+            center, radius = args[0], args[1]
+            handle = _lib.BrlNewEllipsoidAsSphere(
+                float(center[0]), float(center[1]), float(center[2]),
+                float(radius)
+            )
+
+        # 3. Ellipsoid1 Layout Overload: Ellipsoid(center, semi_axis, radius)
+        elif len(args) == 3:
+            center, semi_axis, radius = args[0], args[1], args[2]
+            handle = _lib.BrlNewEllipsoidAsEllipsoid1(
+                float(center[0]), float(center[1]), float(center[2]),
+                float(semi_axis[0]), float(semi_axis[1]), float(semi_axis[2]),
+                float(radius)
+            )
+
+        # 4. General Layout Overload: Ellipsoid(center, axis_a, axis_b, axis_c)
+        elif len(args) == 4:
+            center, axis_a, axis_b, axis_c = args[0], args[1], args[2], args[3]
+            handle = _lib.BrlNewEllipsoidAsGeneralEllipsoid(
+                float(center[0]), float(center[1]), float(center[2]),
+                float(axis_a[0]), float(axis_a[1]), float(axis_a[2]),
+                float(axis_b[0]), float(axis_b[1]), float(axis_b[2]),
+                float(axis_c[0]), float(axis_c[1]), float(axis_c[2])
+            )
+
+        # 5. Fallback Default: Ellipsoid()
         if handle is None:
             handle = _lib.BrlNewEllipsoid()
+
         super().__init__(handle=handle, owned=owned)
-
-    @classmethod
-    def create(cls, center, semi_axis_a, semi_axis_b, semi_axis_c):
-        """Creates a general Ellipsoid primitive using center and semi-principal axes."""
-        handle = _lib.BrlNewEllipsoidAsGeneralEllipsoid(
-            float(center[0]), float(center[1]), float(center[2]),
-            float(semi_axis_a[0]), float(semi_axis_a[1]), float(semi_axis_a[2]),
-            float(semi_axis_b[0]), float(semi_axis_b[1]), float(semi_axis_b[2]),
-            float(semi_axis_c[0]), float(semi_axis_c[1]), float(semi_axis_c[2])
-        )
-        return cls(handle)
-
-    @classmethod
-    def from_ellipsoid1(cls, center, semi_axis, radius):
-        """Creates an Ellipsoid1 variant primitive layout using 1 axis and a radius."""
-        handle = _lib.BrlNewEllipsoidAsEllipsoid1(
-            float(center[0]), float(center[1]), float(center[2]),
-            float(semi_axis[0]), float(semi_axis[1]), float(semi_axis[2]),
-            float(radius)
-        )
-        return cls(handle)
-
-    @classmethod
-    def sphere(cls, center, radius):
-        """Creates an Ellipsoid representing a sphere."""
-        handle = _lib.BrlNewEllipsoidAsSphere(
-            float(center[0]), float(center[1]), float(center[2]),
-            float(radius)
-        )
-        return cls(handle)
 
     def get_center(self):
         """Returns the center point wrapper handle of the ellipsoid."""
