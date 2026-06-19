@@ -51,23 +51,23 @@ class Sphere(Object):
 
         super().__init__(handle=handle, owned=owned)
         
-    def get_center(self):
+    def GetCenter(self):
         """Returns the center point wrapper handle address of the sphere."""
         return _lib.BrlSphereCenter(self._handle)
 
-    def get_radius(self):
+    def GetRadius(self):
         """Returns the radius of the sphere."""
         return _lib.BrlSphereRadius(self._handle)
 
-    def set_center(self, x, y, z):
+    def SetCenter(self, x, y, z):
         """Sets the center point coordinates of the sphere."""
         _lib.BrlSphereSetCenter(self._handle, float(x), float(y), float(z))
 
-    def set_radius(self, radius):
+    def SetRadius(self, radius):
         """Sets the radius of the sphere."""
         _lib.BrlSphereSetRadius(self._handle, float(radius))
 
-    def set_sphere_properties(self, center, radius):
+    def SetSphereProperties(self, center, radius):
         """Mutates the complete internal object context properties in one pass."""
         _lib.BrlSphereSet(
             self._handle,

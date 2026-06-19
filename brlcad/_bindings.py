@@ -121,16 +121,135 @@ _lib.BrlObjectType.argtypes = [ctypes.c_void_p]
 _lib.BrlObjectSetName.restype = None
 _lib.BrlObjectSetName.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
+_lib.BrlObjectName.restype = ctypes.c_char_p
+_lib.BrlObjectName.argtypes = [ctypes.c_void_p]
+
+_lib.BrlObjectHasAttribute.restype = ctypes.c_int
+_lib.BrlObjectHasAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlObjectAttribute.restype = ctypes.c_char_p
+_lib.BrlObjectAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlObjectSetAttribute.restype = None
+_lib.BrlObjectSetAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+
+_lib.BrlObjectAddMultiAttribute.restype = None
+_lib.BrlObjectAddMultiAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+
+_lib.BrlObjectRemoveAttribute.restype = None
+_lib.BrlObjectRemoveAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlObjectClearAttributes.restype = None
+_lib.BrlObjectClearAttributes.argtypes = [ctypes.c_void_p]
+
+_lib.BrlObjectFirstAttribute.restype = ctypes.c_void_p
+_lib.BrlObjectFirstAttribute.argtypes = [ctypes.c_void_p]
+
+_lib.BrlObjectMultiAttribute.restype = ctypes.c_void_p
+_lib.BrlObjectMultiAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlAttributeIteratorNext.restype = None
+_lib.BrlAttributeIteratorNext.argtypes = [ctypes.c_void_p]
+
+_lib.BrlAttributeIteratorGood.restype = ctypes.c_int
+_lib.BrlAttributeIteratorGood.argtypes = [ctypes.c_void_p]
+
+_lib.BrlAttributeIteratorKey.restype = ctypes.c_char_p
+_lib.BrlAttributeIteratorKey.argtypes = [ctypes.c_void_p]
+
+_lib.BrlAttributeIteratorValue.restype = ctypes.c_char_p
+_lib.BrlAttributeIteratorValue.argtypes = [ctypes.c_void_p]
+
 # Arb8 Function Signatures
 
+_lib.BrlNewArb8.argtypes = []
+_lib.BrlNewArb8.restype = ctypes.c_void_p
+
 _lib.BrlNewArb8AsArb4.restype = ctypes.c_void_p
-_lib.BrlNewArb8AsArb4.argtypes = [ctypes.c_double] * 6
+_lib.BrlNewArb8AsArb4.argtypes = [ctypes.c_double] * 12
 
 _lib.BrlNewArb8AsArb8.restype = ctypes.c_void_p
 _lib.BrlNewArb8AsArb8.argtypes = [ctypes.c_double] * 24
 
 _lib.BrlNewArb8AsRectengularParallelPiped.restype = ctypes.c_void_p
 _lib.BrlNewArb8AsRectengularParallelPiped.argtypes = [ctypes.c_double] * 6
+
+_lib.BrlArb8NumberOfVertices.argtypes = [ctypes.c_void_p]
+_lib.BrlArb8NumberOfVertices.restype = ctypes.c_int
+
+_lib.BrlArb8Point.argtypes = [ctypes.c_void_p, ctypes.c_int]
+_lib.BrlArb8Point.restype = ctypes.c_void_p
+
+_lib.BrlArb8RawPoint.argtypes = [ctypes.c_void_p, ctypes.c_int]
+_lib.BrlArb8RawPoint.restype = ctypes.c_void_p
+
+_lib.BrlArb8SetPoint.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double, ctypes.c_double, ctypes.c_double]
+_lib.BrlArb8SetPoint.restype = None
+
+_lib.BrlArb8SetRawPoint.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double, ctypes.c_double, ctypes.c_double]
+_lib.BrlArb8SetRawPoint.restype = None
+
+_lib.BrlArb8SetPointsAsArb2.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsArb2.restype = None
+
+_lib.BrlArb8SetPointsAsArb4.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsArb4.restype = None
+
+_lib.BrlArb8SetPointsAsArb5.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsArb5.restype = None
+
+_lib.BrlArb8SetPointsAsArb6.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsArb6.restype = None
+
+_lib.BrlArb8SetPointsAsArb7.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsArb7.restype = None
+
+_lib.BrlArb8SetPointsAsArb8.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsArb8.restype = None
 
 # Ellipsoid Function Signatures
 _lib.BrlNewEllipsoid.restype = ctypes.c_void_p

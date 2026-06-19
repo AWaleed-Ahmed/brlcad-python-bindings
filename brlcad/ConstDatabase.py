@@ -63,7 +63,7 @@ class ConstDatabase(Handle):
         raw_ptr = _lib.BrlConstDatabaseTitle(self._handle)
         return raw_ptr.decode('utf-8') if raw_ptr else ""
     
-    def plot(self, object_name: str, vector_list: Handle):
+    def Plot(self, object_name: str, vector_list: Handle):
         """Plots the targeted database geometry element data into a VectorList."""
         if not self._handle:
             return
@@ -71,7 +71,7 @@ class ConstDatabase(Handle):
         c_name = ctypes.c_char_p(object_name.encode('utf-8'))
         _lib.BrlConstDatabasePlot(self._handle, c_name, vector_list._handle)
 
-    def get(self, object_name: str):
+    def Get(self, object_name: str):
         """Retrieves a geometric primitive object reference owned by the database."""
         if not self._handle:
             return None
@@ -84,7 +84,7 @@ class ConstDatabase(Handle):
         from .Object import Object
         return Object(handle=raw_obj, owned=False)
 
-    def facetize(self, object_name: str) -> ctypes.c_void_p:
+    def Facetize(self, object_name: str) -> ctypes.c_void_p:
         """Generates a Non-Manifold Geometry mesh pointer managed by the database."""
         if not self._handle:
             return None
@@ -93,7 +93,7 @@ class ConstDatabase(Handle):
         raw_mesh = _lib.BrlConstDatabaseFacetize(self._handle, c_name)
         return raw_mesh
     
-    def select(self, object_name: str):
+    def Select(self, object_name: str):
         """Adds a target object item to the active selection group cluster state."""
         if not self._handle:
             return
@@ -101,19 +101,19 @@ class ConstDatabase(Handle):
         c_name = ctypes.c_char_p(object_name.encode('utf-8'))
         _lib.BrlConstDatabaseSelect(self._handle, c_name)
 
-    def unselect_all(self):
+    def UnselectAll(self):
         """Clears all objects from the active database selection group array."""
         if self._handle:
             _lib.BrlConstDatabaseUnSelectAll(self._handle)
 
-    def is_selection_empty(self) -> bool:
+    def IsSelectionEmpty(self) -> bool:
         """Checks if the active database selection group is empty."""
         if not self._handle:
             return True
         
         return _lib.BrlConstDatabaseSelectionIsEmpty(self._handle) == 1
 
-    def bounding_box_minima(self):
+    def BoundingBoxMinima(self):
         """Returns a 3-tuple (x, y, z) indicating the minimum bounding space corner coordinates."""
         if not self._handle:
             return (0.0, 0.0, 0.0)
@@ -122,7 +122,7 @@ class ConstDatabase(Handle):
         _lib.BrlConstDatabaseBoundingBoxMinima(self._handle, ctypes.byref(x), ctypes.byref(y), ctypes.byref(z))
         return (x.value, y.value, z.value)
 
-    def bounding_box_maxima(self):
+    def BoundingBoxMaxima(self):
         """Returns a 3-tuple (x, y, z) indicating the maximum bounding space corner coordinates."""
         if not self._handle:
             return (0.0, 0.0, 0.0)
@@ -131,26 +131,26 @@ class ConstDatabase(Handle):
         _lib.BrlConstDatabaseBoundingBoxMaxima(self._handle, ctypes.byref(x), ctypes.byref(y), ctypes.byref(z))
         return (x.value, y.value, z.value)
 
-    def first_top_object(self) -> ctypes.c_void_p:
+    def FirstTopObject(self) -> ctypes.c_void_p:
         """Returns the raw pointer to the first top-level object iterator."""
         if not self._handle:
             return None
         
         return _lib.BrlConstDatabaseFirstTopObject(self._handle)
 
-    def iterator_good(self, iterator_handle) -> bool:
+    def IteratorGood(self, iterator_handle) -> bool:
         """Checks if the iterator pointer is still valid."""
         if not iterator_handle:
             return False
         
         return _lib.BrlTopObjectIteratorGood(iterator_handle) == 1
 
-    def iterator_next(self, iterator_handle):
+    def IteratorNext(self, iterator_handle):
         """Advances the iterator to the next top-level object."""
         if iterator_handle:
             _lib.BrlTopObjectIteratorNext(iterator_handle)
 
-    def iterator_name(self, iterator_handle) -> str:
+    def IteratorName(self, iterator_handle) -> str:
         """Gets the string name of the object at the current iterator position."""
         if not iterator_handle:
             return ""
@@ -158,7 +158,7 @@ class ConstDatabase(Handle):
         raw_ptr = _lib.BrlTopObjectIteratorName(iterator_handle)
         return raw_ptr.decode('utf-8') if raw_ptr else ""
 
-    def delete_iterator(self, iterator_handle):
+    def DeleteIterator(self, iterator_handle):
         """Manually deletes the iterator tracking structure from the heap."""
         if iterator_handle:
             _lib.BrlDeleteTopObjectIterator(iterator_handle)

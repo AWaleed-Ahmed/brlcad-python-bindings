@@ -70,23 +70,23 @@ class Ellipsoid(Object):
 
         super().__init__(handle=handle, owned=owned)
 
-    def get_center(self):
+    def GetCenter(self):
         """Returns the center point wrapper handle of the ellipsoid."""
         return _lib.BrlEllipsoidCenter(self._handle)
 
-    def get_semi_principal_axis(self, index):
+    def GetSemiPrincipalAxis(self, index):
         """Returns the specific semi-principal axis vector pointer by index."""
         return _lib.BrlEllipsoidSemiPrincipalAxis(self._handle, int(index))
 
-    def set_center(self, x, y, z):
+    def SetCenter(self, x, y, z):
         """Sets the center point coordinates of the ellipsoid."""
         _lib.BrlEllipsoidSetCenter(self._handle, float(x), float(y), float(z))
 
-    def set_semi_principal_axis(self, index, x, y, z):
+    def SetSemiPrincipalAxis(self, index, x, y, z):
         """Modifies a single directional vector axis by its index location."""
         _lib.BrlEllipsoidSetSemiPrincipalAxis(self._handle, int(index), float(x), float(y), float(z))
 
-    def set_as_general_ellipsoid(self, center, semi_axis_a, semi_axis_b, semi_axis_c):
+    def SetAsGeneralEllipsoid(self, center, semi_axis_a, semi_axis_b, semi_axis_c):
         """Updates geometry footprint values into a general ellipsoid layout configuration."""
         _lib.BrlEllipsoidSetAsGeneralEllipsoid(
             self._handle,
@@ -96,7 +96,7 @@ class Ellipsoid(Object):
             float(semi_axis_c[0]), float(semi_axis_c[1]), float(semi_axis_c[2])
         )
 
-    def set_as_ellipsoid1(self, center, semi_axis, radius):
+    def SetAsEllipsoid1(self, center, semi_axis, radius):
         """Updates geometry footprint values into an Ellipsoid1 subvariant layout."""
         _lib.BrlEllipsoidSetAsEllipsoid1(
             self._handle,
@@ -105,7 +105,7 @@ class Ellipsoid(Object):
             float(radius)
         )
 
-    def set_focals(self, focal_a, focal_b, major_axis_length):
+    def SetFocals(self, focal_a, focal_b, major_axis_length):
         """Sets the geometry properties via focal parameters and major axis length."""
         _lib.BrlEllipsoidSetFocals(
             self._handle,
@@ -114,6 +114,6 @@ class Ellipsoid(Object):
             float(major_axis_length)
         )
 
-    def set_sphere(self, x, y, z, radius):
+    def SetSphere(self, x, y, z, radius):
         """Mutates the internal object memory context to hold uniform spherical properties."""
         _lib.BrlEllipsoidSetSphere(self._handle, float(x), float(y), float(z), float(radius))

@@ -94,31 +94,31 @@ class Cone(Object):
 
         super().__init__(handle=handle, owned=owned)
 
-    def get_base_point(self):
+    def GetBasePoint(self):
         """Returns the base reference point pointer mapping address."""
         return _lib.BrlConeBasePoint(self._handle)
 
-    def get_height(self):
+    def GetHeight(self):
         """Returns the height vector pointer mapping address."""
         return _lib.BrlConeHeight(self._handle)
 
-    def get_semi_principal_axis(self, index):
+    def GetSemiPrincipalAxis(self, index):
         """Returns the specific semi-principal axis vector pointer by index."""
         return _lib.BrlConeSemiPrincipalAxis(self._handle, int(index))
 
-    def set_base_point(self, x, y, z):
+    def SetBasePoint(self, x, y, z):
         """Sets the raw base reference location coordinates."""
         _lib.BrlConeSetBasePoint(self._handle, float(x), float(y), float(z))
 
-    def set_height(self, x, y, z):
+    def SetHeight(self, x, y, z):
         """Sets the primary vector height coordinates."""
         _lib.BrlConeSetHeight(self._handle, float(x), float(y), float(z))
 
-    def set_semi_principal_axis(self, index, x, y, z):
+    def SetSemiPrincipalAxis(self, index, x, y, z):
         """Modifies an orientation axis coordinate trajectory by its index value."""
         _lib.BrlConeSetSemiPrincipalAxis(self._handle, int(index), float(x), float(y), float(z))
 
-    def set_as_truncated_general_cone(self, base, height, semi_axis_a, semi_axis_b, ratio_c, ratio_d):
+    def SetAsTruncatedGeneralCone(self, base, height, semi_axis_a, semi_axis_b, ratio_c, ratio_d):
         """Mutates the primitive structure into a truncated general cone framework."""
         _lib.BrlConeSetAsTruncatedGeneralCone(
             self._handle,
@@ -129,7 +129,7 @@ class Cone(Object):
             float(ratio_c), float(ratio_d)
         )
 
-    def set_as_truncated_erected_cone(self, base, height, semi_axis_a, semi_axis_b, scale):
+    def SetAsTruncatedErectedCone(self, base, height, semi_axis_a, semi_axis_b, scale):
         """Mutates the primitive structure into a truncated erected cone framework."""
         _lib.BrlConeSetAsTruncatedErectedCone(
             self._handle,
@@ -140,7 +140,7 @@ class Cone(Object):
             float(scale)
         )
 
-    def set_as_right_elliptical_cylinder(self, base, height, semi_axis_a, semi_axis_b):
+    def SetAsRightEllipticalCylinder(self, base, height, semi_axis_a, semi_axis_b):
         """Mutates the primitive structure into a right elliptical cylinder configuration."""
         _lib.BrlConeSetAsRightEllipticalCylinder(
             self._handle,
@@ -150,7 +150,7 @@ class Cone(Object):
             float(semi_axis_b[0]), float(semi_axis_b[1]), float(semi_axis_b[2])
         )
 
-    def set_as_truncated_right_circular_cone(self, base, height, radius_base, radius_top):
+    def SetAsTruncatedRightCircularCone(self, base, height, radius_base, radius_top):
         """Mutates the primitive structure into a truncated right circular cone framework."""
         _lib.BrlConeSetAsTruncatedRightCircularCone(
             self._handle,
@@ -159,7 +159,7 @@ class Cone(Object):
             float(radius_base), float(radius_top)
         )
 
-    def set_as_right_circular_cylinder(self, base, height, radius):
+    def SetAsRightCircularCylinder(self, base, height, radius):
         """Mutates the primitive structure into a uniform right circular cylinder framework."""
         _lib.BrlConeSetAsRightCircularCylinder(
             self._handle,
