@@ -148,19 +148,23 @@ _lib.BrlObjectFirstAttribute.argtypes = [ctypes.c_void_p]
 _lib.BrlObjectMultiAttribute.restype = ctypes.c_void_p
 _lib.BrlObjectMultiAttribute.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 
-_lib.BrlAttributeIteratorNext.restype = None
-_lib.BrlAttributeIteratorNext.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectClone.restype = ctypes.c_void_p
+_lib.BrlObjectClone.argtypes = [ctypes.c_void_p]
 
-_lib.BrlAttributeIteratorGood.restype = ctypes.c_int
-_lib.BrlAttributeIteratorGood.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorNext.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorNext.restype = None
 
-_lib.BrlAttributeIteratorKey.restype = ctypes.c_char_p
-_lib.BrlAttributeIteratorKey.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorGood.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorGood.restype = ctypes.c_int
 
-_lib.BrlAttributeIteratorValue.restype = ctypes.c_char_p
-_lib.BrlAttributeIteratorValue.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorKey.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorKey.restype = ctypes.c_char_p
+
+_lib.BrlObjectAttributeIteratorValue.argtypes = [ctypes.c_void_p]
+_lib.BrlObjectAttributeIteratorValue.restype = ctypes.c_char_p
 
 # Arb8 Function Signatures
+
 
 _lib.BrlNewArb8.argtypes = []
 _lib.BrlNewArb8.restype = ctypes.c_void_p
@@ -188,13 +192,6 @@ _lib.BrlArb8SetPoint.restype = None
 
 _lib.BrlArb8SetRawPoint.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double, ctypes.c_double, ctypes.c_double]
 _lib.BrlArb8SetRawPoint.restype = None
-
-_lib.BrlArb8SetPointsAsArb2.argtypes = [
-    ctypes.c_void_p,
-    ctypes.c_double, ctypes.c_double, ctypes.c_double,
-    ctypes.c_double, ctypes.c_double, ctypes.c_double
-]
-_lib.BrlArb8SetPointsAsArb2.restype = None
 
 _lib.BrlArb8SetPointsAsArb4.argtypes = [
     ctypes.c_void_p,
@@ -251,6 +248,16 @@ _lib.BrlArb8SetPointsAsArb8.argtypes = [
 ]
 _lib.BrlArb8SetPointsAsArb8.restype = None
 
+_lib.BrlArb8SetPointsAsRectengularParallelPiped.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double,
+    ctypes.c_double, ctypes.c_double, ctypes.c_double
+]
+_lib.BrlArb8SetPointsAsRectengularParallelPiped.restype = None
+
+_lib.BrlArb8ClassName.restype = ctypes.c_char_p
+_lib.BrlArb8ClassName.argtypes = []
+
 # Ellipsoid Function Signatures
 _lib.BrlNewEllipsoid.restype = ctypes.c_void_p
 _lib.BrlNewEllipsoid.argtypes = []
@@ -288,6 +295,9 @@ _lib.BrlEllipsoidSetAsGeneralEllipsoid.argtypes = [ctypes.c_void_p] + [ctypes.c_
 _lib.BrlEllipsoidSetAsEllipsoid1.restype = None
 _lib.BrlEllipsoidSetAsEllipsoid1.argtypes = [ctypes.c_void_p] + [ctypes.c_double] * 7
 
+_lib.BrlEllipsoidClassName.restype = ctypes.c_char_p
+_lib.BrlEllipsoidClassName.argtypes = []
+
 # Sphere Function Signatures
 
 _lib.BrlNewSphere.restype = ctypes.c_void_p
@@ -310,6 +320,9 @@ _lib.BrlSphereSetCenter.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_d
 
 _lib.BrlSphereSet.restype = None
 _lib.BrlSphereSet.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double]
+
+_lib.BrlSphereClassName.restype = ctypes.c_char_p
+_lib.BrlSphereClassName.argtypes = []
 
 # Cone Function Signatures 
 
@@ -364,6 +377,9 @@ _lib.BrlConeSemiPrincipalAxis.argtypes = [ctypes.c_void_p, ctypes.c_int]
 _lib.BrlConeSetSemiPrincipalAxis.restype = None
 _lib.BrlConeSetSemiPrincipalAxis.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double, ctypes.c_double, ctypes.c_double]
 
+_lib.BrlConeClassName.restype = ctypes.c_char_p
+_lib.BrlConeClassName.argtypes = []
+
 # VectorList Function Signatures
 
 
@@ -372,3 +388,135 @@ _lib.BrlNewVectorList.argtypes = []
 
 _lib.BrlVectorListClear.restype = None
 _lib.BrlVectorListClear.argtypes = [ctypes.c_void_p]
+
+#Combinations
+
+
+_lib.BrlNewCombination.restype = ctypes.c_void_p
+_lib.BrlNewCombination.argtypes = []
+
+_lib.BrlCombinationIsRegion.restype = ctypes.c_int
+_lib.BrlCombinationIsRegion.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetIsRegion.restype = None
+_lib.BrlCombinationSetIsRegion.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationFastgenRegion.restype = ctypes.c_int
+_lib.BrlCombinationFastgenRegion.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetFastgenRegion.restype = None
+_lib.BrlCombinationSetFastgenRegion.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationRegionId.restype = ctypes.c_int
+_lib.BrlCombinationRegionId.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetRegionId.restype = None
+_lib.BrlCombinationSetRegionId.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationAircode.restype = ctypes.c_int
+_lib.BrlCombinationAircode.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetAircode.restype = None
+_lib.BrlCombinationSetAircode.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationGiftMaterial.restype = ctypes.c_int
+_lib.BrlCombinationGiftMaterial.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetGiftMaterial.restype = None
+_lib.BrlCombinationSetGiftMaterial.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationLineOfSight.restype = ctypes.c_int
+_lib.BrlCombinationLineOfSight.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetLineOfSight.restype = None
+_lib.BrlCombinationSetLineOfSight.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationHasColor.restype = ctypes.c_int
+_lib.BrlCombinationHasColor.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetHasColor.restype = None
+_lib.BrlCombinationSetHasColor.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationRed.restype = ctypes.c_double
+_lib.BrlCombinationRed.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetRed.restype = None
+_lib.BrlCombinationSetRed.argtypes = [ctypes.c_void_p, ctypes.c_double]
+
+_lib.BrlCombinationGreen.restype = ctypes.c_double
+_lib.BrlCombinationGreen.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetGreen.restype = None
+_lib.BrlCombinationSetGreen.argtypes = [ctypes.c_void_p, ctypes.c_double]
+
+_lib.BrlCombinationBlue.restype = ctypes.c_double
+_lib.BrlCombinationBlue.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetBlue.restype = None
+_lib.BrlCombinationSetBlue.argtypes = [ctypes.c_void_p, ctypes.c_double]
+
+_lib.BrlCombinationShader.restype = ctypes.c_char_p
+_lib.BrlCombinationShader.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetShader.restype = None
+_lib.BrlCombinationSetShader.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlCombinationInherit.restype = ctypes.c_int
+_lib.BrlCombinationInherit.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetInherit.restype = None
+_lib.BrlCombinationSetInherit.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlCombinationMaterial.restype = ctypes.c_char_p
+_lib.BrlCombinationMaterial.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetMaterial.restype = None
+_lib.BrlCombinationSetMaterial.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlCombinationTemperature.restype = ctypes.c_double
+_lib.BrlCombinationTemperature.argtypes = [ctypes.c_void_p]
+
+_lib.BrlCombinationSetTemperature.restype = None
+_lib.BrlCombinationSetTemperature.argtypes = [ctypes.c_void_p, ctypes.c_double]
+
+_lib.BrlCombinationAddLeaf.restype = None
+_lib.BrlCombinationAddLeaf.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+
+_lib.BrlCombinationTree.restype = ctypes.c_void_p
+_lib.BrlCombinationTree.argtypes = [ctypes.c_void_p]
+
+_lib.BrlTreeNodeSetMatrix.restype = None
+_lib.BrlTreeNodeSetMatrix.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+
+_lib.BrlTreeNodeOperation.restype = ctypes.c_int
+_lib.BrlTreeNodeOperation.argtypes = [ctypes.c_void_p]
+
+_lib.BrlTreeNodeName.restype = ctypes.c_char_p
+_lib.BrlTreeNodeName.argtypes = [ctypes.c_void_p]
+
+_lib.BrlTreeNodeLeftOperand.restype = ctypes.c_void_p
+_lib.BrlTreeNodeLeftOperand.argtypes = [ctypes.c_void_p]
+
+_lib.BrlTreeNodeRightOperand.restype = ctypes.c_void_p
+_lib.BrlTreeNodeRightOperand.argtypes = [ctypes.c_void_p]
+
+_lib.BrlTreeNodeOperand.restype = ctypes.c_void_p
+_lib.BrlTreeNodeOperand.argtypes = [ctypes.c_void_p]
+
+_lib.BrlTreeNodeApply.restype = ctypes.c_void_p
+_lib.BrlTreeNodeApply.argtypes = [ctypes.c_void_p, ctypes.c_int]
+
+_lib.BrlTreeNodeApplyWithOther.restype = ctypes.c_void_p
+_lib.BrlTreeNodeApplyWithOther.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p]
+
+_lib.BrlTreeNodeApplyWithLeaf.restype = ctypes.c_void_p
+_lib.BrlTreeNodeApplyWithLeaf.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_char_p]
+
+_lib.BrlTreeNodeApplyOtherWith.restype = ctypes.c_void_p
+_lib.BrlTreeNodeApplyOtherWith.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p]
+
+_lib.BrlTreeNodeApplyLeafWith.restype = ctypes.c_void_p
+_lib.BrlTreeNodeApplyLeafWith.argtypes = [ctypes.c_char_p, ctypes.c_int, ctypes.c_void_p]
+
+_lib.BrlCombinationClassName.restype = ctypes.c_char_p
+_lib.BrlCombinationClassName.argtypes = []

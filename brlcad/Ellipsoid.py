@@ -117,3 +117,8 @@ class Ellipsoid(Object):
     def SetSphere(self, x, y, z, radius):
         """Mutates the internal object memory context to hold uniform spherical properties."""
         _lib.BrlEllipsoidSetSphere(self._handle, float(x), float(y), float(z), float(radius))
+
+    def ClassName(self):
+        """Returns the static C++ class designator identification string."""
+        res = _lib.BrlEllipsoidClassName()
+        return res.decode('utf-8') if res else ""

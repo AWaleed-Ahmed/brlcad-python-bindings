@@ -109,15 +109,15 @@ class Object(Handle):
         if not it:
             return
 
-        while _lib.BrlAttributeIteratorGood(it) == 1:
-            key_ptr = _lib.BrlAttributeIteratorKey(it)
-            val_ptr = _lib.BrlAttributeIteratorValue(it)
+        while _lib.BrlObjectAttributeIteratorGood(it) == 1:
+            key_ptr = _lib.BrlObjectAttributeIteratorKey(it)
+            val_ptr = _lib.BrlObjectAttributeIteratorValue(it)
             
             key = key_ptr.decode('utf-8') if key_ptr else ""
             val = val_ptr.decode('utf-8') if val_ptr else ""
             
             yield key, val
-            _lib.BrlAttributeIteratorNext(it)
+            _lib.BrlObjectAttributeIteratorNext(it)
             
         _lib.BrlDeleteHandle(it)
 
@@ -131,14 +131,20 @@ class Object(Handle):
         if not it:
             return
 
-        while _lib.BrlAttributeIteratorGood(it) == 1:
-            key_ptr = _lib.BrlAttributeIteratorKey(it)
-            val_ptr = _lib.BrlAttributeIteratorValue(it)
+        while _lib.BrlObjectAttributeIteratorGood(it) == 1:
+            key_ptr = _lib.BrlObjectAttributeIteratorKey(it)
+            val_ptr = _lib.BrlObjectAttributeIteratorValue(it)
             
             k = key_ptr.decode('utf-8') if key_ptr else ""
             v = val_ptr.decode('utf-8') if val_ptr else ""
             
             yield k, v
-            _lib.BrlAttributeIteratorNext(it)
+            _lib.BrlObjectAttributeIteratorNext(it)
             
         _lib.BrlDeleteHandle(it)
+        
+    def Clone(self):
+        """Creates a deep duplicate tracking copy of the primitive shape."""
+        raw_clone = _lib.BrlObjectClone(self._handle)
+        # Dynamic look-up optimization instantiates the proper subclass layout context
+        return self.__class__(raw_clone, owned=True) if raw_clone else None

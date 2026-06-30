@@ -32,6 +32,8 @@ from .Cone import Cone
 from .Arb8 import Arb8
 from .Sphere import Sphere
 from .Ellipsoid import Ellipsoid
+from .Combination import Combination
+from .Combination import TreeNode
 
 __all__ = [
     'ConstDatabase',
@@ -42,5 +44,7 @@ __all__ = [
     'Arb8',
     'Cone',
     'Sphere',
-    'Ellipsoid'
+    'Ellipsoid',
+    'Combination',
+    'TreeNode'
 ]

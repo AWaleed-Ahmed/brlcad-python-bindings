@@ -74,3 +74,8 @@ class Sphere(Object):
             float(center[0]), float(center[1]), float(center[2]),
             float(radius)
         )
+
+    def ClassName(self):
+        """Returns the static C++ class designator identification string."""
+        res = _lib.BrlSphereClassName()
+        return res.decode('utf-8') if res else ""

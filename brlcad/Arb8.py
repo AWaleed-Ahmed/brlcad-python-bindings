@@ -91,7 +91,7 @@ class Arb8(Object):
 
     def SetPointAsArb2(self, p1, p2):
         """Updates internal geometry via a 2-point bounding box footprint."""
-        _lib.BrlArb8SetPointsAsArb2(
+        _lib.BrlArb8SetPointsAsRectengularParallelPiped(
             self._handle,
             float(p1[0]), float(p1[1]), float(p1[2]),
             float(p2[0]), float(p2[1]), float(p2[2])
@@ -143,3 +143,16 @@ class Arb8(Object):
             raise ValueError("Updating all points requires exactly 8 entries of 3D vectors.")
         flat_coords = [float(coord) for point in points_list for coord in point]
         _lib.BrlArb8SetPointsAsArb8(self._handle, *flat_coords)
+        
+    def SetPointsAsRectangularParallelpiped(self, p1, p2):
+        """Mutates the frame tracking bounds using two opposite coordinate corners."""
+        _lib.BrlArb8SetPointsAsRectengularParallelPiped(
+            self._handle,
+            float(p1[0]), float(p1[1]), float(p1[2]),
+            float(p2[0]), float(p2[1]), float(p2[2])
+        )
+    
+    def ClassName(self):
+        """Returns the static C++ class designator identification string."""
+        res = _lib.BrlArb8ClassName()
+        return res.decode('utf-8') if res else ""
